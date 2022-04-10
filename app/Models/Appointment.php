@@ -8,13 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'description',
+        'url',
+        'date_start',
+        'date_end',
+        'is_all_day',
+        'is_notificate'
+    ];
 
     public function user()
     {
       return $this->belongsTo(User::class);
     }
 
-    public function email(){
+    public function emails(){
         return $this->hasMany(Email::class);
     }
 }
