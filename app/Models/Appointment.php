@@ -14,15 +14,16 @@ class Appointment extends Model
         'date_start',
         'date_end',
         'is_all_day',
-        'is_notificate'
+        'is_notificate',
+        'user_id'
     ];
 
     public function user()
     {
-      return $this->belongsTo(User::class);
+      return $this->belongsTo(User::class, 'user_id');
     }
 
     public function emails(){
-        return $this->hasMany(Email::class);
+        return $this->hasMany(Emails::class, 'appointment_id');
     }
 }
