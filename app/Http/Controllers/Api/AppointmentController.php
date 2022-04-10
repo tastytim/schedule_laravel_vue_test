@@ -17,9 +17,21 @@ class AppointmentController extends Controller
         return $appointments;
     }
 
-   //CREATE NEW APPOINTMENT
+    //CREATE NEW APPOINTMENT
     public function createAppointment(Request $request)
     {
-    
+        
+        $appointment = new Appointment();
+        $appointment->user_id = 2;
+        $appointment->description = $request->description;
+        $appointment->url = $request->url;
+        $appointment->date_start = $request->date_start;
+        $appointment->date_end = $request->date_end;
+        $appointment->is_all_day = $request->is_all_day;
+        $appointment->is_notificate = $request->is_notificate;
+        $appointment->save();
+
+
+        return response('Ok', 200);
     }
 }

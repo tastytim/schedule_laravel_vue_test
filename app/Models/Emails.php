@@ -9,7 +9,7 @@ class Emails extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['email'];
+    protected $fillable = ['email','appointment_id'];
 
     public function appointment()
   {
