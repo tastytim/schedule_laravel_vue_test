@@ -24,6 +24,9 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "dayjs": "^1.11.0",
+        "jspdf": "^2.5.1",
+        "jspdf-autotable": "^3.5.23",
         "vue-laravel-csrf": "^1.0.0"
     }
 }

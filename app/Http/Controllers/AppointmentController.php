@@ -19,14 +19,6 @@ class AppointmentController extends Controller
     //CREATE NEW APPOINTMENT
     public function createAppointment(Request $request)
     {
-        // $request->validate([
-        //     "description" => 'required',
-        //     "url" => 'required',
-        //     "date_start" => 'required',
-        //     "date_end" => 'required',
-        //     "emails" => 'required',
-        // ]);   
-
         $appointment = new Appointment([
             'user_id' => Auth::id(),
             'description' => $request->input('description'),
