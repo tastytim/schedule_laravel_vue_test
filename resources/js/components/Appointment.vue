@@ -90,8 +90,8 @@
             </div>
         </form>
         <!-- TABLE APPOINTMENTS -->
-        <div>
-            <table class="table">
+        <div class="horizontal-scroll">
+            <table class="my_table table">
                 <thead>
                     <tr>
                         <th>Description</th>
@@ -122,6 +122,7 @@
                                 {{ email.email }}
                             </span>
                         </td>
+                        <td><button class="btn btn-dark" @click="deleteAppointment(item.id)">Delete</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -206,6 +207,17 @@ export default {
                     console.log(error);
                 });
         },
+        // DELETE APPOINTMENT
+        deleteAppointment(id){
+           axios.delete(`/appointments/${id}`).then((resp)=>{
+               if(resp.status==200){
+                   this.getAppointments();
+               }
+           })
+           .catch((error) => {
+                    console.log(error);
+                });
+        },
         // GET TODAY DAY AND SET MIN TO INPUT DATE_START
         setMinToInputDate(e) {
             let today = dayjs().format("YYYY-MM-DD HH:mm");
@@ -259,7 +271,7 @@ export default {
               emailsArray.forEach(element => {
                   stringEmails = stringEmails + ' ' + element.email;
               });
-             let {id, description, url, date_start , date_end, is_all_day , email = stringEmails.trim()} = element;           
+             let {id, description, url, date_start , date_end, is_all_day , email = stringEmails.trim()} = element;        
               this.pdfAppointments.push(Object.values({id, description, url, date_start , date_end, is_all_day , email}));
            });
         }
@@ -267,4 +279,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+.horizontal-scroll{
+overflow: hidden;
+  overflow-x: auto;
+  clear: both;
+  width: 100%;
+}
+
+.my-table {
+  min-width: rem-calc(640);
+}
+
+</style>
