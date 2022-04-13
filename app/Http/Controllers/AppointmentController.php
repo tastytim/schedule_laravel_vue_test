@@ -79,4 +79,12 @@ class AppointmentController extends Controller
 
         return response('Appointment deleted!', 200);
     }
+
+
+    // GET APPOINTMENT
+
+    public function getAppointment($id){
+        return  Appointment::where('id',$id)->with('emails')->get();
+    } 
+
 }

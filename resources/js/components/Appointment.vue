@@ -122,7 +122,26 @@
                                 {{ email.email }}
                             </span>
                         </td>
-                        <td><button class="btn btn-dark" @click="deleteAppointment(item.id)">Delete</button></td>
+                        <td>
+                            <button
+                                class="btn btn-dark"
+                                @click="deleteAppointment(item.id)"
+                            >
+                                Delete
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-dark">
+                                <router-link
+                                    :to="{
+                                       
+                                        path: `edit/${item.id}`,
+                                        
+                                    }"
+                                    >Edit
+                                </router-link>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -163,8 +182,8 @@ export default {
     data() {
         return {
             appointments: [],
-            filteredAppointments : [],
-            pdfAppointments:[],
+            filteredAppointments: [],
+            pdfAppointments: [],
             data: {
                 description: "",
                 date_start: "",
@@ -173,10 +192,10 @@ export default {
                 is_all_day: false,
                 emails: "",
             },
-            period :{
-                week : 7,
+            period: {
+                week: 7,
                 month: 30,
-            }
+            },
         };
     },
 
@@ -208,13 +227,15 @@ export default {
                 });
         },
         // DELETE APPOINTMENT
-        deleteAppointment(id){
-           axios.delete(`/appointments/${id}`).then((resp)=>{
-               if(resp.status==200){
-                   this.getAppointments();
-               }
-           })
-           .catch((error) => {
+        deleteAppointment(id) {
+            axios
+                .delete(`/appointments/${id}`)
+                .then((resp) => {
+                    if (resp.status == 200) {
+                        this.getAppointments();
+                    }
+                })
+                .catch((error) => {
                     console.log(error);
                 });
         },
@@ -229,67 +250,99 @@ export default {
 
             //Create doc PDF
             const doc = new jsPDF();
-            doc.text('APPOINTMENTS', 50, 15 , {align: 'center'} , {baseline:'top'});
+            doc.text(
+                "APPOINTMENTS",
+                50,
+                15,
+                { align: "center" },
+                { baseline: "top" }
+            );
 
             //Create table
             autoTable(doc, { html: "APPOINTMENTS" });
 
             // add data to table
             autoTable(doc, {
-                head: [["ID", "DESCRIPTION", "LINK", "DATE START" , "DATE END", "All DAY","EMAILS"]],
+                head: [
+                    [
+                        "ID",
+                        "DESCRIPTION",
+                        "LINK",
+                        "DATE START",
+                        "DATE END",
+                        "All DAY",
+                        "EMAILS",
+                    ],
+                ],
                 body: this.pdfAppointments,
             });
 
-            doc.output('save', 'info.pdf');
+            doc.output("save", "info.pdf");
         },
-        
-        //   FILTER FOR PERIOD
-        filterForPeriod(e){
-            // RECEIVE ID FROM TARGET
-          let period = 0;
-          if(e.target.id == 'week_btn'){
-              period = this.period.week;
-          }else{
-              period = this.period.month;
-          }
-          this.filteredAppointments = this.appointments.filter((e)=>{
-              let today = dayjs();
-              let data_inizio = dayjs(e.date_start);
-              let data_fine = dayjs(e.date_end);
 
-              let diffA = data_inizio.diff(today , 'day');
-              let diffB = data_fine.diff(today , 'day');
-              return diffA > 0 && diffB < period;
-          })
+        //   FILTER FOR PERIOD
+        filterForPeriod(e) {
+            // RECEIVE ID FROM TARGET
+            let period = 0;
+            if (e.target.id == "week_btn") {
+                period = this.period.week;
+            } else {
+                period = this.period.month;
+            }
+            this.filteredAppointments = this.appointments.filter((e) => {
+                let today = dayjs();
+                let data_inizio = dayjs(e.date_start);
+                let data_fine = dayjs(e.date_end);
+
+                let diffA = data_inizio.diff(today, "day");
+                let diffB = data_fine.diff(today, "day");
+                return diffA > 0 && diffB < period;
+            });
         },
         //FILTER FOR VALUES AND CONVERT EMAILS ARRAY TO STRING
-        filterAppointmentsForValues(){
-           this.filteredAppointments.map((element) => { 
-              let stringEmails = '';
-              let {emails} = element;
-              let emailsArray = Object.values({...emails});
-              emailsArray.forEach(element => {
-                  stringEmails = stringEmails + ' ' + element.email;
-              });
-             let {id, description, url, date_start , date_end, is_all_day , email = stringEmails.trim()} = element;        
-              this.pdfAppointments.push(Object.values({id, description, url, date_start , date_end, is_all_day , email}));
-           });
-        }
+        filterAppointmentsForValues() {
+            this.filteredAppointments.map((element) => {
+                let stringEmails = "";
+                let { emails } = element;
+                let emailsArray = Object.values({ ...emails });
+                emailsArray.forEach((element) => {
+                    stringEmails = stringEmails + " " + element.email;
+                });
+                let {
+                    id,
+                    description,
+                    url,
+                    date_start,
+                    date_end,
+                    is_all_day,
+                    email = stringEmails.trim(),
+                } = element;
+                this.pdfAppointments.push(
+                    Object.values({
+                        id,
+                        description,
+                        url,
+                        date_start,
+                        date_end,
+                        is_all_day,
+                        email,
+                    })
+                );
+            });
+        },
     },
 };
 </script>
 
 <style>
-
-.horizontal-scroll{
-overflow: hidden;
-  overflow-x: auto;
-  clear: both;
-  width: 100%;
+.horizontal-scroll {
+    overflow: hidden;
+    overflow-x: auto;
+    clear: both;
+    width: 100%;
 }
 
 .my-table {
-  min-width: rem-calc(640);
+    min-width: rem-calc(640);
 }
-
 </style>
