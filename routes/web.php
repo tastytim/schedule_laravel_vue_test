@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,14 @@ Route::get('/', function () {
 Route::get('/appointments',  [AppointmentController::class, 'getAppointments']);
 //ADD APPOINTMENTS
 Route::post('/appointments', [AppointmentController::class, 'createAppointment']);
+//DELETE APPOINTMENT
+Route::delete('/appointments/{id}', [AppointmentController::class, 'deleteAppointment']);
+// GET APPOIN
+Route::get('/appointments/{id}', [AppointmentController::class, 'getAppointment']);
+
 Auth::routes();
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+// // Email Route
+// Route::get('send-mail', [MailController::class, 'index']);

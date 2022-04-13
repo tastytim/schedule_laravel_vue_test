@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailJob;
+use App\Mail\AppEmail;
 use App\Models\Appointment;
 use App\Models\Emails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AppointmentController extends Controller
 {
@@ -33,15 +36,55 @@ class AppointmentController extends Controller
         // GET ID FROM CREATED APPOINTMENT
         $appointment_id = $appointment->id;
 
+
+        // users a quali spedire
+        $sendToUsers = [];
+
+
         //CREATE EMAILS
         $emails = explode(',', $request->emails);
         foreach ($emails as $value) {
+            array_push($sendToUsers, trim($value));
             Emails::create([
                 'email' => trim($value),
                 'appointment_id' => $appointment_id,
             ]);
         }
 
+
+
+        // SEND EMAILS ONE HOUR BEFORE
+        foreach ($sendToUsers as $recipient) {
+            // ONE MINUTE AFTER CREATE APPOINTMENT
+            Mail::to($recipient)->later(now()->addMinutes(1), new AppEmail($appointment->url));
+            // ONE HOUR BEFORE APPOINTMENT
+            // Mail::to($recipient)->later(Carbon::instance($appointment->date_start)->subHours(1), new AppEmail($appointment->url));
+        }
+
+
+
+
         return response('Appointment created!', 200);
     }
+
+
+
+    // DELETE APPOINTMENT AND RELATIVE EMAILS
+    public function deleteAppointment($id)
+    {
+        $appointment = Appointment::find($id);
+        $appointment->emails()->delete();
+        $appointment->delete();
+
+
+        return response('Appointment deleted!', 200);
+    }
+
+
+    // GET APPOINTMENT
+
+    public function getAppointment($id){
+        return  Appointment::where('id',$id)->with('emails')->get();
+    } 
+
 }

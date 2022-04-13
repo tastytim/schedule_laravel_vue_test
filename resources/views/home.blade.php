@@ -2,10 +2,14 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-    {{-- Componente Vue --}}
-        <appointment-component>
-        </appointment-component>
+    <div id='app'>
+
+        <div class="row justify-content-center">
+            {{-- Componente Vue Router--}}
+
+            <router-view></router-view>
+        </div>
     </div>
+
 </div>
 @endsection
