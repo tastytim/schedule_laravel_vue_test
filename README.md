@@ -33,3 +33,10 @@ php artisan make:job NameJob
 ## 
 ## 
 ## 
+
+Finally, don't forget to instruct your application to use the database driver by updating the QUEUE_CONNECTION variable in your application's .env file:
+
+QUEUE_CONNECTION=database
+
+
+https://laravel.com/docs/9.x/queues#connections-vs-queues
